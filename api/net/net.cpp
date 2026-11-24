@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <regex>
+#include <cstdlib>
 
 #include "helpers.h"
 #include "errors.h"
@@ -157,12 +158,19 @@ json request(const json &input) {
         }
     }
     else {
+        // Handle Set-Cookie correctly.
+        size_t header_count = res->get_header_value_count("Set-Cookie");
+        vector<string> cookies(header_count);
+        for (size_t i = 0; i < header_count; ++i) {
+            cookies.push_back(res->get_header_value("Set-Cookie", "", i));
+        }
+
         output["returnValue"] = {
             { "status", res->status },
             { "statusText", res->reason },
             { "body", res->body },
             { "headers", res->headers },
-            { "cookies", res->get_header_value("Set-Cookie") },
+            { "cookies", cookies },
             { "contentType", res->get_header_value("Content-Type") },
             { "location", res->location },
             { "version", res->version }
