@@ -162,7 +162,7 @@ json request(const json &input) {
         size_t header_count = res->get_header_value_count("Set-Cookie");
         vector<string> cookies(header_count);
         for (size_t i = 0; i < header_count; ++i) {
-            cookies.push_back(res->get_header_value("Set-Cookie", i));
+            cookies.push_back(res->get_header_value("Set-Cookie", "", i));
         }
 
         output["returnValue"] = {
